@@ -1,12 +1,13 @@
-use std::{fs::File, io::Read, path::PathBuf};
+use std::{fs::File, io::Read, path::PathBuf, str::FromStr};
 
-use advent_of_code_2023::solve;
+use advent_of_code_2023::{solve, Part};
 use clap::Parser;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
 struct Cli {
     day: u8,
+    part: Part,
     input: PathBuf,
 }
 
@@ -18,6 +19,6 @@ fn main() {
     file.read_to_string(&mut input)
         .expect("Could not read input file");
 
-    let solution = solve(cli.day, &input);
+    let solution = solve(cli.day, cli.part, &input);
     println!("{}", solution);
 }
