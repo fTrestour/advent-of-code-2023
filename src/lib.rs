@@ -2,6 +2,7 @@ use std::str::FromStr;
 
 mod day_1;
 mod day_2;
+mod day_4;
 mod day_5;
 mod day_5_part2;
 mod day_6;
@@ -33,6 +34,7 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (5, Part::Two) => day_5_part2::solve_part2(input) as u32,
         (6, Part::One) => day_6::solve_part1(input) as u32,
         (6, Part::Two) => day_6::solve_part2(input) as u32,
+        (4, Part::One) => day_4::solve_part1(input),
         _ => todo!(),
     }
 }
