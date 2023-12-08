@@ -7,13 +7,9 @@ pub fn solve_part1(input: &str) -> u32 {
 
     input.next();
 
-    let mut next_stop = "AAA";
-    let mut steps_count = 0;
-
     let mut map = HashMap::new();
-    while next_stop != "ZZZ" {
-        let line = &input.next().unwrap().trim();
-        dbg!(&line);
+    while let Some(line) = input.next() {
+        let line = line.trim();
         let mut line = line.split(" = ");
 
         let current_place = line.next().unwrap();
@@ -29,20 +25,28 @@ pub fn solve_part1(input: &str) -> u32 {
         let right = places.next().unwrap();
 
         map.insert(current_place, (left, right));
+    }
 
-        while let Some((left, right)) = map.get(next_stop) {
-            next_stop = match instructions.next().unwrap() {
-                'L' => left,
-                'R' => right,
-                _ => panic!("Invalid instruction"),
-            };
-            steps_count = steps_count + 1;
+    dbg!(&map);
 
-            dbg!(&next_stop, &steps_count);
-        }
+    let mut next_stop = "AAA";
+    let mut steps_count = 0;
+
+    while next_stop != "ZZZ" {
+        let (left, right) = map.get(next_stop).unwrap();
+        next_stop = match instructions.next().unwrap() {
+            'L' => left,
+            'R' => right,
+            _ => panic!("Invalid instruction"),
+        };
+        steps_count = steps_count + 1;
+
+        dbg!(&next_stop, &steps_count);
     }
 
     steps_count
+
+    // todo!()
 }
 
 pub fn solve_part2(input: &str) -> u32 {
