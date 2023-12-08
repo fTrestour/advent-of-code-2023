@@ -2,10 +2,10 @@ use std::collections::HashMap;
 
 use itertools::Itertools;
 
-pub fn solve(input: &str) -> u32 {
+pub fn solve(input: &str) -> u64 {
     let mut input = input.lines();
 
-    let mut instructions = input.next().unwrap().trim().chars().cycle();
+    let instructions = input.next().unwrap().trim().chars().cycle();
 
     input.next();
 
@@ -29,30 +29,38 @@ pub fn solve(input: &str) -> u32 {
         map.insert(current_place, (left, right));
     }
 
-    let mut next_stops = map.keys().filter(|key| key.ends_with('A')).collect_vec();
-    let mut steps_count = 0;
+    let starting_points = map.keys().filter(|key| key.ends_with('A')).collect_vec();
 
-    while next_stops.iter().any(|place| !place.ends_with('Z')) {
-        let instruction = instructions.next().unwrap();
+    for starting in starting_points {
+        let mut instructions = instructions.clone();
+        let mut seen_places = vec![];
 
-        next_stops = next_stops
+        let mut next_place = *starting;
+        loop {
+            let (left, right) = map.get(next_place).unwrap();
+            next_place = match instructions.next().unwrap() {
+                'L' => left,
+                'R' => right,
+                _ => panic!("Invalid instruction"),
+            };
+
+            if next_place.ends_with('Z') && seen_places.contains(&next_place) {
+                break;
+            }
+            seen_places.push(next_place);
+        }
+
+        let (init_len, _) = seen_places
             .iter()
-            .map(|place| {
-                let (left, right) = map.get(*place).unwrap();
-
-                let test = match instruction {
-                    'L' => left,
-                    'R' => right,
-                    _ => panic!("Invalid instruction"),
-                };
-                test
-            })
-            .collect_vec();
-
-        steps_count = steps_count + 1;
+            .find_position(|place| **place == next_place)
+            .unwrap();
+        let init_len = (init_len + 1) as u64;
+        println!("{}", init_len);
     }
 
-    steps_count
+    // Small cheat but this program doesn't actually compute the answer
+    // The actual answer is the least common multiplier of all init_len values
+    todo!()
 }
 
 #[cfg(test)]
