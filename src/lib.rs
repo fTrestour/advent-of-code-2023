@@ -27,7 +27,7 @@ impl FromStr for Part {
 
 pub fn solve(day: u8, part: Part, input: &str) -> u32 {
     match (day, part) {
-        (1, Part::One) => day_1::solve(input),
+        (1, Part::One) => day_1::solve_part1(input),
         (2, Part::One) => day_2::solve_part1(input),
         (2, Part::Two) => day_2::solve_part2(input),
         (5, Part::One) => day_5::solve_part1(input) as u32,
@@ -36,6 +36,7 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (6, Part::Two) => day_6::solve_part2(input) as u32,
         (4, Part::One) => day_4::solve_part1(input),
         (4, Part::Two) => day_4::solve_part2(input),
+        (1, Part::Two) => day_1::solve_part2(input),
         _ => todo!(),
     }
 }
