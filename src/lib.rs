@@ -6,6 +6,7 @@ mod day_4;
 mod day_5;
 mod day_5_part2;
 mod day_6;
+mod day_8;
 
 #[derive(Clone)]
 pub enum Part {
@@ -37,6 +38,7 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (4, Part::One) => day_4::solve_part1(input),
         (4, Part::Two) => day_4::solve_part2(input),
         (1, Part::Two) => day_1::solve_part2(input),
+        (8, Part::One) => day_8::solve_part1(input),
         _ => todo!(),
     }
 }
