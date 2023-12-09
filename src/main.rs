@@ -1,4 +1,4 @@
-use std::{fs::File, io::Read, path::PathBuf, str::FromStr};
+use std::{fs::File, io::Read};
 
 use advent_of_code_2023::{solve, Part};
 use clap::Parser;
@@ -8,13 +8,13 @@ use clap::Parser;
 struct Cli {
     day: u8,
     part: Part,
-    input: PathBuf,
 }
 
 fn main() {
     let cli = Cli::parse();
+    let input = format!("input/day_{}.txt", cli.day);
 
-    let mut file = File::open(cli.input).expect("Could not open input file");
+    let mut file = File::open(input).expect("Could not open input file");
     let mut input = String::new();
     file.read_to_string(&mut input)
         .expect("Could not read input file");

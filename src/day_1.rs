@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 pub fn solve_part1(input: &str) -> u32 {
     input
         .lines()
