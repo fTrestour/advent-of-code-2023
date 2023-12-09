@@ -21,7 +21,8 @@ pub fn solve_part2(input: &str) -> u32 {
     input
         .lines()
         .map(|line| {
-            let line = line.trim();
+            let mut line = line.trim();
+            dbg!(&line);
 
             let mut digits = vec![];
 
@@ -30,34 +31,38 @@ pub fn solve_part2(input: &str) -> u32 {
                 "six", "seven", "eight", "nine",
             ];
 
-            let postion = line
-                .chars()
-                .position(|c| patterns.iter().any(|pattern| pattern.starts_with(c)));
-
-            let mut matching_digit = patterns
-                .iter()
-                .find_map(|pattern| line.strip_prefix(*pattern).map(|rest| (pattern, rest))); // Doesn't work when not prefix
-
-            while let Some((&digit, rest)) = matching_digit {
-                let digit = match digit {
-                    "one" | "1" => 1,
-                    "two" | "2" => 2,
-                    "three" | "3" => 3,
-                    "four" | "4" => 4,
-                    "five" | "5" => 5,
-                    "six" | "6" => 6,
-                    "seven" | "7" => 7,
-                    "eight" | "8" => 8,
-                    "nine" | "9" => 9,
-                    _ => panic!(),
-                };
-
-                digits.push(digit);
-
+            let mut matching_digit;
+            loop {
                 matching_digit = patterns
                     .iter()
-                    .find_map(|pattern| rest.strip_prefix(*pattern).map(|rest| (pattern, rest)));
+                    .find(|pattern| line.strip_prefix(*pattern).is_some());
+
+                if let Some(digit) = matching_digit {
+                    let digit = match *digit {
+                        "one" | "1" => 1,
+                        "two" | "2" => 2,
+                        "three" | "3" => 3,
+                        "four" | "4" => 4,
+                        "five" | "5" => 5,
+                        "six" | "6" => 6,
+                        "seven" | "7" => 7,
+                        "eight" | "8" => 8,
+                        "nine" | "9" => 9,
+                        _ => panic!(),
+                    };
+
+                    digits.push(digit);
+                }
+
+                let (_, rest) = line.split_at(1);
+                line = rest;
+
+                if line.is_empty() {
+                    break;
+                }
             }
+
+            dbg!(&digits);
 
             digits.first().unwrap() * 10 + digits.last().unwrap()
         })
