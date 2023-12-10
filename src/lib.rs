@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 mod day_1;
+mod day_10;
 mod day_2;
 mod day_4;
 mod day_5;
@@ -9,6 +10,7 @@ mod day_6;
 mod day_8;
 mod day_8_part2;
 mod day_9;
+mod grid_input;
 
 #[derive(Clone)]
 pub enum Part {
@@ -44,6 +46,8 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (8, Part::Two) => day_8_part2::solve(input) as u32,
         (9, Part::One) => day_9::solve_part1(input) as u32,
         (9, Part::Two) => day_9::solve_part2(input) as u32,
+        (10, Part::One) => day_10::solve_part1(input),
+        (10, Part::Two) => day_10::solve_part2(input),
         _ => todo!(),
     }
 }
