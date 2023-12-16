@@ -3,6 +3,7 @@ use std::str::FromStr;
 mod day_1;
 mod day_10;
 mod day_15;
+mod day_16;
 mod day_2;
 mod day_4;
 mod day_5;

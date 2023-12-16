@@ -2,7 +2,7 @@ use std::{cmp::Ordering, collections::HashMap};
 
 use itertools::Itertools;
 
-use crate::grid_input::{GridInput, Position};
+use crate::grid_input::{Direction, GridInput, Position};
 
 pub fn solve_part1(input: &str) -> u32 {
     let input = parse(input);
@@ -65,7 +65,7 @@ fn find_main_loop(input: &GridInput<Pipe>) -> HashMap<Position, (u32, Pipe)> {
             .filter(|direction| current_pipe.output_directions().contains(direction))
             .collect_vec();
         for direction in adjacent_directions {
-            let new_position = direction.to_position(&current_position);
+            let new_position = direction.to_position(&current_position).unwrap();
 
             if main_loop
                 .get(&new_position)
@@ -101,25 +101,6 @@ fn parse(input: &str) -> GridInput<Pipe> {
     GridInput {
         max_position,
         data: input,
-    }
-}
-
-#[derive(PartialEq, Eq, Clone, Hash, Debug)]
-pub enum Direction {
-    Top,
-    Left,
-    Right,
-    Bottom,
-}
-
-impl Direction {
-    pub fn to_position(&self, p: &Position) -> Position {
-        match self {
-            Direction::Top => Position::from_coordinates(p.x, p.y - 1),
-            Direction::Left => Position::from_coordinates(p.x - 1, p.y),
-            Direction::Right => Position::from_coordinates(p.x + 1, p.y),
-            Direction::Bottom => Position::from_coordinates(p.x, p.y + 1),
-        }
     }
 }
 
