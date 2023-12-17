@@ -73,11 +73,21 @@ pub fn solve_part2(input: &str) -> usize {
         current_iteration = current_iteration + 1;
         max = max.max(result);
         println!(
-            "Iteration {}/{} : {} energized cells, {} current max",
-            current_iteration, total_iterations, result, max
+            "Iteration {}/{} : {} energized cells for {}, {} current max",
+            current_iteration, total_iterations, result, starting_point, max
         );
     }
     max
+
+    // Code above allows to identify entrypoints that result in a high count
+
+    // Running the script with highest count found
+    // And no break condition on the solving loop
+    // solve(
+    //     &mut grid.clone(),
+    //     Position::from_coordinates(109, 10),
+    //     Direction::Left,
+    // )
 }
 
 fn solve(
@@ -102,17 +112,20 @@ fn solve(
             // println!("{}", grid);
 
             loops_count = loops_count + 1;
-            if loops_count % 200000 == 0 {
-                // println!("Loop number {}", loops_count);
+            if loops_count % 300000 == 0 {
                 if grid.count_energized_cells() - energized_cells_count == 0 {
                     break;
                 }
                 energized_cells_count = grid.count_energized_cells();
+                // println!(
+                //     "Loop number {}: {} energized cells",
+                //     loops_count, energized_cells_count
+                // );
             }
         };
     }
 
-    energized_cells_count
+    grid.count_energized_cells()
 }
 
 #[derive(Clone)]
@@ -195,7 +208,6 @@ impl From<char> for CellType {
 struct Beam {
     direction: Direction,
     position: Position,
-    already_hit: Vec<Position>,
 }
 
 impl Display for Beam {
@@ -209,7 +221,6 @@ impl Beam {
         Beam {
             direction,
             position,
-            already_hit: vec![],
         }
     }
 
@@ -217,9 +228,7 @@ impl Beam {
         self.position = self.direction.to_position(&self.position).ok_or(())?;
 
         let cell = grid.get_mut(&self.position)?.ok_or(())?;
-
         cell.is_energized = true;
-        self.already_hit.push(self.position);
 
         Ok(self.encounters(&cell.content))
     }
