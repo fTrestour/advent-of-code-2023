@@ -51,6 +51,8 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (10, Part::One) => day_10::solve_part1(input),
         (10, Part::Two) => day_10::solve_part2(input),
         (15, Part::One) => day_15::solve_part1(input) as u32,
+        (16, Part::One) => day_16::solve_part1(input) as u32,
+        (16, Part::Two) => day_16::solve_part2(input) as u32,
         _ => todo!(),
     }
 }

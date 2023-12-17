@@ -52,7 +52,7 @@ fn find_main_loop(input: &GridInput<Pipe>) -> HashMap<Position, (u32, Pipe)> {
     let mut main_loop = HashMap::new();
     main_loop.insert(
         starting_position.clone(),
-        (0, input.get(&starting_position).unwrap().clone()),
+        (0, input.get(&starting_position).unwrap().unwrap().clone()),
     );
 
     while let Some(current_position) = queue.pop() {
@@ -75,7 +75,7 @@ fn find_main_loop(input: &GridInput<Pipe>) -> HashMap<Position, (u32, Pipe)> {
                 continue;
             }
 
-            let pipe = input.get(&new_position).unwrap();
+            let pipe = input.get(&new_position).unwrap().unwrap();
             let input_directions = &pipe.input_directions();
             if input_directions.contains(&direction) {
                 if !queue.contains(&new_position) {

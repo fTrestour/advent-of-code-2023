@@ -1,6 +1,8 @@
+use std::fmt::Display;
+
 use itertools::Itertools;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GridInput<T> {
     pub max_position: Position,
     pub data: Vec<T>,
@@ -17,21 +19,24 @@ impl<T> GridInput<T> {
             .map(|(index, el)| (self.position_from_index(index), el))
     }
 
-    pub fn get(&self, position: &Position) -> Option<&T> {
-        self.data.get(self.position_to_index(position))
+    pub fn get(&self, position: &Position) -> Result<Option<&T>, ()> {
+        Ok(self.data.get(self.position_to_index(position)?))
     }
 
-    pub fn get_mut(&mut self, position: &Position) -> Option<&mut T> {
-        let index = self.position_to_index(position);
-        self.data.get_mut(index)
+    pub fn get_mut(&mut self, position: &Position) -> Result<Option<&mut T>, ()> {
+        let index = self.position_to_index(position)?;
+        Ok(self.data.get_mut(index))
     }
 
     fn position_from_index(&self, index: usize) -> Position {
         Position::from_index(index, self.max_position.x + 1)
     }
 
-    fn position_to_index(&self, position: &Position) -> usize {
-        position.to_index(self.max_position.x + 1)
+    fn position_to_index(&self, position: &Position) -> Result<usize, ()> {
+        if position.x > self.max_position.y || position.y > self.max_position.y {
+            return Err(());
+        }
+        Ok(position.to_index(self.max_position.x + 1))
     }
 }
 
@@ -58,6 +63,12 @@ impl Position {
     }
 }
 
+impl Display for Position {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{},{}", self.x, self.y)
+    }
+}
+
 #[derive(PartialEq, Eq, Clone, Hash, Debug, Copy)]
 pub enum Direction {
     Top,
@@ -76,5 +87,20 @@ impl Direction {
             (_, _, Direction::Right) => Some(Position::from_coordinates(p.x + 1, p.y)),
             (_, _, Direction::Bottom) => Some(Position::from_coordinates(p.x, p.y + 1)),
         }
+    }
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Direction::Top => "⬆️",
+                Direction::Left => "⬅️",
+                Direction::Right => "➡️",
+                Direction::Bottom => "⬇️",
+            }
+        )
     }
 }
