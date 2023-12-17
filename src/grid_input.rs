@@ -40,7 +40,7 @@ impl<T> GridInput<T> {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Hash, Debug, PartialOrd, Copy)]
+#[derive(PartialEq, Eq, Clone, Hash, Debug, PartialOrd, Copy, Default)]
 pub struct Position {
     pub x: usize,
     pub y: usize,
@@ -88,6 +88,24 @@ impl Direction {
             (_, _, Direction::Bottom) => Some(Position::from_coordinates(p.x, p.y + 1)),
         }
     }
+
+    pub fn list_all() -> Vec<Direction> {
+        vec![
+            Direction::Top,
+            Direction::Right,
+            Direction::Bottom,
+            Direction::Left,
+        ]
+    }
+
+    pub fn reverse(&self) -> Direction {
+        match self {
+            Direction::Top => Direction::Bottom,
+            Direction::Left => Direction::Right,
+            Direction::Right => Direction::Left,
+            Direction::Bottom => Direction::Top,
+        }
+    }
 }
 
 impl Display for Direction {
@@ -102,5 +120,20 @@ impl Display for Direction {
                 Direction::Bottom => "⬇️",
             }
         )
+    }
+}
+
+impl<T> Display for GridInput<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for row in self.data.chunks(self.max_position.x + 1) {
+            for cell in row {
+                write!(f, "{}", cell)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }

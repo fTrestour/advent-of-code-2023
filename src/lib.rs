@@ -4,6 +4,7 @@ mod day_1;
 mod day_10;
 mod day_15;
 mod day_16;
+mod day_17;
 mod day_2;
 mod day_4;
 mod day_5;
@@ -53,6 +54,7 @@ pub fn solve(day: u8, part: Part, input: &str) -> u32 {
         (15, Part::One) => day_15::solve_part1(input) as u32,
         (16, Part::One) => day_16::solve_part1(input) as u32,
         (16, Part::Two) => day_16::solve_part2(input) as u32,
+        (17, Part::One) => day_17::solve_part1(input) as u32,
         _ => todo!(),
     }
 }
