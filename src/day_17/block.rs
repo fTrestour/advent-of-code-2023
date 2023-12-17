@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use crate::grid_input::Direction;
 
-#[derive(Clone)]
+#[derive(Clone, Hash, PartialEq, Eq)]
 pub struct Block {
     pub heat_loss: usize,
     pub direction: Option<Direction>,

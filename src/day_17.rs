@@ -1,7 +1,10 @@
 mod block;
 mod crucible;
 
-use std::{collections::VecDeque, u32};
+use std::{
+    collections::{HashSet, VecDeque},
+    u32,
+};
 
 use itertools::Itertools;
 
@@ -26,54 +29,46 @@ pub fn solve_part1(input: &str) -> usize {
     };
     println!("{}", grid);
 
-    let crucible = Crucible::from(grid);
-    let mut results = vec![];
-    let mut queue = VecDeque::from(vec![crucible]);
-    while let Some(crucible) = queue.pop_front() {
-        let available_directions = crucible.available_directions();
-        for direction in available_directions {
-            let mut new_crucible = crucible.clone();
+    let crucible = Crucible::from(grid.clone());
+
+    let mut visited = HashSet::new();
+    let mut fronteer = HashSet::new();
+    fronteer.insert(crucible.clone());
+
+    loop {
+        let min_on_fronteer = fronteer
+            .iter()
+            .min_by_key(|crucible| crucible.heat_loss)
+            .unwrap()
+            .to_owned();
+        visited.insert(min_on_fronteer.position);
+
+        if min_on_fronteer.position == grid.max_position {
+            println!("{}", min_on_fronteer);
+            return min_on_fronteer.heat_loss;
+        }
+
+        fronteer.remove(&min_on_fronteer);
+        for direction in min_on_fronteer.available_directions() {
+            let mut new_crucible = min_on_fronteer.clone();
             new_crucible.r#move(&direction);
 
-            if new_crucible.distance() == 0 {
-                println!("{}", new_crucible);
-                results.push(new_crucible);
-            } else {
-                let min_crucible = queue
-                    .iter()
-                    .filter(|crucible| crucible.position == new_crucible.position)
-                    .min_by_key(|crucible| crucible.heat_loss);
+            let previous = fronteer
+                .iter()
+                .find(|crucible| crucible.position == new_crucible.position);
 
-                if let Some(min_crucible) = min_crucible {
-                    if crucible.heat_loss < min_crucible.heat_loss {
-                        queue.push_front(new_crucible);
-                    }
-                } else {
-                    queue.push_front(new_crucible);
+            if let Some(previous) = previous {
+                if new_crucible.heat_loss < previous.heat_loss {
+                    fronteer.remove(&previous.clone());
+                    fronteer.insert(new_crucible);
                 }
+            } else {
+                fronteer.insert(new_crucible);
             }
-
-            let current_min = results.iter().map(|crucible| crucible.heat_loss).min();
-            queue = VecDeque::from(
-                queue
-                    .iter()
-                    .filter(|crucible| {
-                        current_min
-                            .map(|current_min| crucible.heat_loss < current_min)
-                            .unwrap_or(true)
-                    })
-                    .sorted_by_key(|crucible| crucible.heat_loss + crucible.distance())
-                    .map(|c| c.to_owned())
-                    .collect_vec(),
-            );
         }
-    }
 
-    results
-        .iter()
-        .map(|crucible| crucible.heat_loss)
-        .min()
-        .unwrap()
+        println!("{}", min_on_fronteer);
+    }
 }
 
 pub fn solve_part2(input: &str) -> u32 {

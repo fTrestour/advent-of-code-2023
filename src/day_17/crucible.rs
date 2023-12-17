@@ -6,7 +6,7 @@ use crate::grid_input::{Direction, GridInput, Position};
 
 use super::block::Block;
 
-#[derive(Clone)]
+#[derive(Clone, Hash, PartialEq, Eq)]
 pub struct Crucible {
     pub heat_loss: usize,
     pub position: Position,
